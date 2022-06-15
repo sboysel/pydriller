@@ -59,15 +59,13 @@ class ContributorsCount(ProcessMetric):
             if total == 0:
                 del self.contributors[path]
             else:
+                cumulative = list(accumulate(sorted(contributions.values(), reverse=True)))
                 contributors_count = len(contributions.values())
                 minor_contributors_count = sum(1
                                                for v in contributions.values()
                                                if v/total < .05)
 
-                bus_factor_count = sum(1
-                                       for v in
-                                       list(accumulate(sorted(contributions.values(), reverse=True)))
-                                       if v < total / 2)
+                bus_factor_count = sum(1 for v in cumulative if v < total / 2)
                 bus_factor_count += 1
 
                 self.contributors[path] = contributors_count
@@ -89,7 +87,7 @@ class ContributorsCount(ProcessMetric):
 
     def measure_bus_factor(self):
         """
-        Return the smallest number of contributions whos contributions make up
-        50% of total contributions.
+        Return the smallest number of contributors with contributions that
+        make up at least 50% of total contributions to a file.
         """
         return self.bus_factor
