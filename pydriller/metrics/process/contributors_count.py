@@ -4,6 +4,7 @@ modified file in the repo in a given time range.
 
 See https://dl.acm.org/doi/10.1145/2025113.2025119
 """
+from itertools import accumulate
 from pydriller import ModificationType
 from pydriller.metrics.process.process_metric import ProcessMetric
 
@@ -32,6 +33,8 @@ class ContributorsCount(ProcessMetric):
 
         self.contributors = {}
         self.minor_contributors = {}
+        self.major_contributors = {}
+        self.bus_factor = {}
 
         renamed_files = {}
 
@@ -61,8 +64,15 @@ class ContributorsCount(ProcessMetric):
                                                for v in contributions.values()
                                                if v/total < .05)
 
+                bus_factor_count = sum(1
+                                       for v in
+                                       list(accumulate(sorted(contributions.values(), reverse=True)))
+                                       if v < total / 2)
+                bus_factor_count += 1
+
                 self.contributors[path] = contributors_count
                 self.minor_contributors[path] = minor_contributors_count
+                self.bus_factor[path] = bus_factor_count
 
     def count(self):
         """
@@ -76,3 +86,10 @@ class ContributorsCount(ProcessMetric):
         5% of code of a file.
         """
         return self.minor_contributors
+
+    def measure_bus_factor(self):
+        """
+        Return the smallest number of contributions whos contributions make up
+        50% of total contributions.
+        """
+        return self.bus_factor
