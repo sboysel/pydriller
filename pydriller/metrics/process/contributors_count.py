@@ -18,6 +18,10 @@ class ContributorsCount(ProcessMetric):
 
     * Minor Contributors Count: measures the number of contributors who
       authored less than 5% of code of a file.
+
+    * Bus Factor: measures smallest number of contributors cumulatively
+      responsible for at least 50% of the total modifications to a file.
+      See https://chaoss.community/metric-bus-factor/
     """
 
     def __init__(self, path_to_repo: str,

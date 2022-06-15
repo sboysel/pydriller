@@ -123,6 +123,9 @@ The class ``ContributorsCount`` has two methods:
 
 * ``count()`` to count the number of contributors who modified a file;
 * ``count_minor()`` to count the number of *minor* contributors who modified a file, i.e., those that contributed less than 5% to the file.
+* ``measure_bus_factor()`` to calculate the "bus factor" for a file: the
+  smallest number of contributors whose cumulative modifications make up at 
+  least 50% of total modification to a file.
 
 For example::
 
@@ -132,10 +135,12 @@ For example::
                                to_commit='to commit hash')
     count = metric.count()
     minor = metric.count_minor()
+    bus_factor = metric.measure_bus_factor()
     print('Number of contributors per file: {}'.format(count))
     print('Number of "minor" contributors per file: {}'.format(minor))
+    print('Bus Factor: {}'.format(bus_factor))
 
-will print the number of developers that contributed to each of the modified file in the evolution period ``[from_commit, to_commit]`` and the number of developers that contributed less than 5% to each of the modified file in the evolution period ``[from_commit, to_commit]``. 
+will print the number of developers that contributed to each of the modified file in the evolution period ``[from_commit, to_commit]``, the number of developers that contributed less than 5% to each of the modified file in the evolution period ``[from_commit, to_commit]``, and the smallest number of developers whose cumulative modifications make up at least 50% of total modifications to each of the modified file in the evolution period ``[from_commit, to_commit]``. 
 
 
 Contributors Experience
